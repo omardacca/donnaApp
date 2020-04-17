@@ -1,0 +1,24 @@
+{
+  "name": "donna",
+  "version": "1.0.0",
+  "description": "Donna Whatsapp chatbot and expenses monitoring",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/omardacca/donnaApp.git"
+  },
+  "author": "DonnaTeam",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/omardacca/donnaApp/issues"
+  },
+  "homepage": "https://github.com/omardacca/donnaApp#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1"
+  }
+}
