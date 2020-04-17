@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "dbmasteruser",
+    "password": "}ABONNAMOSHKAMAL!!hALA",
+    "database": "dbmaster",
+    "host": "ls-4003b2933ceeb1dc3669062a58caa59abdcc1dc6.cya7uplqlxdg.eu-central-1.rds.amazonaws.com",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "dbmasteruser",
+    "password": "}ABONNAMOSHKAMAL!!hALA",
+    "database": "dbmaster",
+    "host": "ls-4003b2933ceeb1dc3669062a58caa59abdcc1dc6.cya7uplqlxdg.eu-central-1.rds.amazonaws.com",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "dbmasteruser",
+    "password": "}ABONNAMOSHKAMAL!!hALA",
+    "database": "dbmaster",
+    "host": "ls-4003b2933ceeb1dc3669062a58caa59abdcc1dc6.cya7uplqlxdg.eu-central-1.rds.amazonaws.com",
+    "dialect": "mysql"
+  }
+}
