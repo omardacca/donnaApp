@@ -10,6 +10,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 const models = require('../models');
+const twillio = require('./twillio');
 
 
 
@@ -20,6 +21,25 @@ app.get('/hello', async (req, res) => {
     
     return res.send(results);
 });
+
+app.get('/send', async (req, res) => {
+    const results = await twillio.sendMessage('Hello from node');
+
+    if(results) {
+        return res.send(`message sent successfully, ${results}`);
+    }
+    return res.send('error occured');
+})
+
+app.post('/incoming', async (req, res) => {
+    console.log(`req body: ${JSON.stringify(req)}`);
+    const results = await twillio.sendMessage('a new message received in our server');
+
+    if(results) {
+        return res.send(`message sent successfully, ${results}`);
+    }
+    return res.send('error occured');
+})
 
 app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`));
 
