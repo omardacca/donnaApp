@@ -32,7 +32,6 @@ app.get('/send', async (req, res) => {
 })
 
 app.post('/incoming', async (req, res) => {
-    console.log(`req body: ${JSON.stringify(req)}`);
     const results = await twillio.sendMessage('a new message received in our server');
 
     if(results) {
