@@ -11,7 +11,7 @@ module.exports.sendMessage = async function(messageToSend) {
     try {
         const message = await client.messages.create({
             body: `${messageToSend}`,
-            to: 'whatsapp:+972504222053',  // Text this number
+            to: 'whatsapp:+972546104999',  // Text this number
             from: 'whatsapp:+14155238886' // From a valid Twilio number
         });
 
