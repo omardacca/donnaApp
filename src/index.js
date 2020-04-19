@@ -33,7 +33,7 @@ app.get('/send', async (req, res) => {
     if(results) {
         return res.send(`message sent successfully, ${results}`);
     }
-    return res.status(200).send('error occured');
+    return res.status(200).send('error occured');m
 })
 
 app.post('/incoming', async (req, res) => {
