@@ -22,6 +22,10 @@ app.get('/hello', async (req, res) => {
     return res.send(results);
 });
 
+app.post('/botcallback', (req, res) => {
+    console.log('botcallback called');
+})
+
 app.get('/send', async (req, res) => {
     const results = await twillio.sendMessage('Hello from node');
 
