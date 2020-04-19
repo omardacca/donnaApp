@@ -24,6 +24,7 @@ app.get('/hello', async (req, res) => {
 
 app.post('/botcallback', (req, res) => {
     console.log('botcallback called');
+    return res.send('success');
 })
 
 app.get('/send', async (req, res) => {
