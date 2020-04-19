@@ -1,8 +1,8 @@
 var twilio = require('twilio');
 
 //var accountSid = 'SM72b395e010abe91e6ec7dbec4e3e5dde';
-var accountSid = 'AC84d44296e943a97e3d1686389db8f153'; // Your Account SID from www.twilio.com/console
-var authToken = '5e30cac5af81d5a9543871ee5b1f16a2';   // Your Auth Token from www.twilio.com/console
+var accountSid = 'AC8a352dc740b51549e58e7f49295b22c0'; // Your Account SID from www.twilio.com/console
+var authToken = '4a636bf45ead2a114a94f08febc7b510';   // Your Auth Token from www.twilio.com/console
 
 var client = new twilio(accountSid, authToken);
 
