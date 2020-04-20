@@ -10,7 +10,6 @@ module.exports = (sequelize, DataTypes) => {
     updatedAt: DataTypes.DATE,
   }, {});
   User.associate = function(models) {
-    models.User.hasOne(models.)
   };
   return User;
 };

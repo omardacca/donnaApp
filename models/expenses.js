@@ -8,7 +8,8 @@ module.exports = (sequelize, DataTypes) => {
     updatedAt: DataTypes.DATE,
   }, {});
   Expenses.associate = function(models) {
-    // associations can be defined here
+    models.Category.hasMany(models.Expenses);
+    models.Expenses.belongsTo(models.Category);
   };
   return Expenses;
 };

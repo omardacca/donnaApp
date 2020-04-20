@@ -15,12 +15,17 @@ const CacheManager = require('./Classes/CacheManager');
 
 
 const Users = require('./Classes/Users');
+const warmer = require('./Classes/Warmer');
+const { mainTaskId } = require('./CONSTS/consts');
 
 
-app.get('/', (req, res) => res.send('Hello World!'))
+app.get('/', (req, res) => {
+    addExpense({ userId: 17, amount: 55, categoryId: 1 })
+    res.send('success');
+})
 app.get('/hello', async (req, res) => {
     
-    const response = await Users.getUserExpensesStatus({ phoneNumber: 17, dateOfMonth: new moment() });
+    const response = await Users.addExpense({ userId: 17, amount: 55, categoryId: 1 });
     
     return res.send(response);
 });
@@ -71,6 +76,26 @@ app.post('/incoming', async (req, res) => {
     } else {
         const userState = await CacheManager.get(record.From);
         
+        if(!userState) {
+            const taskId = parseInt(req.body.Body);
+            if(typeof taskId !== 'number') {
+                return res.send(`ادخلت رقم عملية غير صحيح، الرجاء ادخال رقم العمليه المطلوبه:
+                1. تسجيل مصروفات جديده
+                2. عرض البيانات الماليه المتراكمه
+                3. الخروج`);
+            }
+
+            // if task id is valid
+            if(taskId === mainTaskId.getStatus) {
+                const newGetStatusInstance = { ...warmer.getStatus };
+                await newGetStatusInstance.load(req.body.Body);
+                const responseMessage = newGetStatusInstance.executionFunction(newGetStatusInstance.params);
+
+                res.status(200).send(responseMessage);
+            }
+            
+        }
+
     }
 
     if(results) {

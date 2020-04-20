@@ -2,6 +2,21 @@ const moment = require('moment');
 const models = require('../../models');
 
 class Users {
+    static async findUserByPhoneNumber(phoneNumber) {
+        try {
+            let record = await models.sequelize.models.User.findOne({ 
+                where: { phoneNumber },
+                attributes: ['id'],
+            });
+
+            return record;
+            
+        } catch(error) {
+            console.log(error);
+            return null;
+        }
+    }
+    
     static async findOrCreateUser(phoneNumber) {
         try {
             let record = await models.sequelize.models.User.findOne({ 
@@ -23,7 +38,7 @@ class Users {
         }
     }
 
-    // { userId: 17, amount: 55, categoryId: 1 }
+    // TESTED: OK
     static async addExpense(expensesObject) {
         if(!expensesObject || !expensesObject.categoryId || !expensesObject.userId || !expensesObject.amount || typeof expensesObject.amount !== 'number') {
             console.log(`addExpense: invalid parameteres`);
@@ -39,9 +54,12 @@ class Users {
             return record;
         } catch(error) {
             console.log(`error while adding expense for user: ${userId}, and category: ${categoryId}`);
+            return null;
         }
     }
 
+
+    // TESTED: OK
     static async getUserExpensesStatus(options) {
         try {
 
@@ -49,7 +67,7 @@ class Users {
                 where: {
                     userId: options.userId,
                     createdAt: {
-                        $between: [
+                        [models.Sequelize.Op.between]: [
                             options.dateOfMonth.startOf('M').format(), 
                             options.dateOfMonth.endOf('M').format()
                         ]
@@ -71,13 +89,28 @@ class Users {
                 return 'Error!'
             }
     
-            expensesResults = expensesResults.map(expensesResults.dataValues);
+            const aggregatedExpenses = { };
+            let message = `المصروفات المتراكمه لهذا الشهر: 
+            `;
+            expensesResults = expensesResults.map(row => row.dataValues);
             expensesResults.forEach((expense) => {
-                console.log(expense);
+                if(!aggregatedExpenses[expense.Category.Name]) {
+                    aggregatedExpenses[expense.Category.Name] = expense.amount;
+                } else {
+                    aggregatedExpenses[expense.Category.Name] += expense.amount;
+                }
             });
 
+            Object.keys(aggregatedExpenses).forEach(key => {
+                message += `${key}: ${aggregatedExpenses[key]}
+                `
+            });
+
+
+            return message;
+
         } catch(error) {
-            console.log(`error while executing getUserExpensesStatus, error: ${error}`);ma
+            console.log(`error while executing getUserExpensesStatus, error: ${error}`);
         }
     }
 }
