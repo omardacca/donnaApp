@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
-const generalApi = require('./api/generalApi');
+const moment = require('moment');
 const port = 3000;
 
 app.use(express.urlencoded({ extended: true }));
@@ -19,10 +19,8 @@ const Users = require('./Classes/Users');
 
 app.get('/', (req, res) => res.send('Hello World!'))
 app.get('/hello', async (req, res) => {
-
-    const response = await CacheManager.store({ key: 'omarAA', value: { name: 'Helllo', ttl: 60*2 }});
-
-    console.log(response);
+    
+    const response = await Users.getUserExpensesStatus({ phoneNumber: 17, dateOfMonth: new moment() });
     
     return res.send(response);
 });

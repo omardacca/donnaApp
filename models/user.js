@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     updatedAt: DataTypes.DATE,
   }, {});
   User.associate = function(models) {
-    // associations can be defined here
+    models.User.hasOne(models.)
   };
   return User;
 };

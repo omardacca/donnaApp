@@ -23,6 +23,7 @@ class Users {
         }
     }
 
+    // { userId: 17, amount: 55, categoryId: 1 }
     static async addExpense(expensesObject) {
         if(!expensesObject || !expensesObject.categoryId || !expensesObject.userId || !expensesObject.amount || typeof expensesObject.amount !== 'number') {
             console.log(`addExpense: invalid parameteres`);
@@ -49,13 +50,16 @@ class Users {
                     userId: options.userId,
                     createdAt: {
                         $between: [
-                            dateOfMonth.startOf('M').format(), 
-                            endDate.lastOf('M').format()
+                            options.dateOfMonth.startOf('M').format(), 
+                            options.dateOfMonth.endOf('M').format()
                         ]
                     }
                 },
                 include: [{
                     model: models.sequelize.models.Category, as: 'Category', required: true,
+                    on: {
+                        userId: models.Sequelize.where(models.Sequelize.col('Expenses.categoryId'), '=', models.Sequelize.col('Category.id')),
+                      },
                   }],
             });
     
@@ -73,7 +77,7 @@ class Users {
             });
 
         } catch(error) {
-            console.log(`error while executing getUserExpensesStatus, error: ${error}`);
+            console.log(`error while executing getUserExpensesStatus, error: ${error}`);ma
         }
     }
 }
