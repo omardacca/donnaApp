@@ -11,16 +11,32 @@ app.use(cors());
 
 const models = require('../models');
 const twillio = require('./twillio');
+const CacheManager = require('./Classes/CacheManager');
 
+
+const Users = require('./Classes/Users');
 
 
 app.get('/', (req, res) => res.send('Hello World!'))
 app.get('/hello', async (req, res) => {
 
-    const results = await generalApi.getAllUsers(req, res);
+    const response = await CacheManager.store({ key: 'omarAA', value: { name: 'Helllo', ttl: 60*2 }});
+
+    console.log(response);
     
-    return res.send(results);
+    return res.send(response);
 });
+
+app.get('/get', async (req, res) => {
+
+    const response = await CacheManager.get({ key: 'omarAA'});
+
+    const message = `(from cache) value of the keys omar is ${JSON.stringify(response)}`;
+    console.log(message);
+    
+    return res.send(message);
+});
+
 
 app.post('/botcallback', (req, res) => {
     console.log('botcallback called');
@@ -37,9 +53,27 @@ app.get('/send', async (req, res) => {
 })
 
 app.post('/incoming', async (req, res) => {
-    console.log(`Body: ${JSON.stringify(req.body)}`);
     console.log(`Body: ${req.body.Body}`);
-    const results = await twillio.sendMessage('a new message received in our server');
+
+    const [record, created] = await Users.findOrCreateUser(req.body.From);
+    if(!record) {
+        return res.send(`Oops.. Something went wrong`);
+    }
+
+    let results;
+
+    if(created) {
+        const messageText = `
+        مرحبا بك في تشات بوت دونا،
+        الرجاء ارسال رقم العمليه المطلوبه:
+        1. تسجيل مصروفات جديده
+        2. عرض البيانات الماليه المتراكمه
+        3. الخروج`
+        results = await twillio.sendMessage(messageText, req.body.From);
+    } else {
+        const userState = await CacheManager.get(record.From);
+        
+    }
 
     if(results) {
         return res.send(`message sent successfully, ${results}`);

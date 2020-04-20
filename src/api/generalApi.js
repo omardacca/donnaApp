@@ -5,3 +5,4 @@ exports.getAllUsers = async function(req, res) {
     console.log(`results: ${JSON.stringify(results)}`);
     return results;
 }
+

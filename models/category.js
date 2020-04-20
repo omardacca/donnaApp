@@ -11,10 +11,10 @@ module.exports = (sequelize, DataTypes) => {
     updatedAt: DataTypes.DATE,
   }, {});
   Category.associate = function(models) {
-    Category.hasMany(models.User, {
+    /* models.User.hasMany(Category, {
       foreignKey: 'userId'
-    });
-    models.User.belongsTo(Category);
+    }); */
+    // models.User.belongsTo(Category);
   };
   return Category;
 };
