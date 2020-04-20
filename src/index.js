@@ -74,7 +74,7 @@ app.post('/incoming', async (req, res) => {
         3. الخروج`
         results = await twillio.sendMessage(messageText, req.body.From);
     } else {
-        const userState = await CacheManager.get(record.From);
+        let userState = await CacheManager.get(req.body.From);
         
         if(!userState) {
             const taskId = parseInt(req.body.Body);
@@ -88,19 +88,44 @@ app.post('/incoming', async (req, res) => {
             // if task id is valid
             if(taskId === mainTaskId.getStatus) {
                 const newGetStatusInstance = { ...warmer.getStatus };
-                await newGetStatusInstance.load(req.body.Body);
-                const responseMessage = newGetStatusInstance.executionFunction(newGetStatusInstance.params);
+                await newGetStatusInstance.load(req.body.From);
+                const responseMessage = await newGetStatusInstance.executionFunction(newGetStatusInstance.params);
 
-                res.status(200).send(responseMessage);
+                return res.status(200).send(responseMessage);
+            }
+            
+            if(taskId === mainTaskId.addExpenses) {
+                const newAddExpensesPickedInstance = { ...warmer.addExpensesPicked };
+                await newAddExpensesPickedInstance.load(req.body.From);
+                const responseMessage = await newAddExpensesPickedInstance.executionFunction(newAddExpensesPickedInstance.params);
+
+                await CacheManager.store({ key: req.body.From, value: JSON.stringify(newAddExpensesPickedInstance)});
+                
+                return res.status(200).send(responseMessage);
+            }
+
+            // tasks of type step 2, so cache must have Task Object
+            if(userState) {
+                userState = JSON.parse(userState);
+
+                if(userState.validate(parseFloat(req.body.Body))) {
+                    const nextFunctionTask = userState.nextPossibleTask;
+
+                    const nextFunctionTask = { ...warmer.addExpensesPicked };
+                    await nextFunctionTask.load(req.body.Body);
+                    nextFunctionTask.userInput = {...userState.userInput, amount: parseFloat(this.body.Body) }
+                    await nextFunctionTask.executionFunction(nextFunctionTask.params);
+                    
+                    const responseMessage = `تم اضافة المصروف بنجاح، شكرا لك :)`;
+                    await CacheManager.store({ key: req.body.From, value: null });
+                    return res.status(200).send(responseMessage);
+                }
             }
             
         }
 
     }
 
-    if(results) {
-        return res.send(`message sent successfully, ${results}`);
-    }
     return res.send('error occured');
 })
 

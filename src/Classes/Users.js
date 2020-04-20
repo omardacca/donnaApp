@@ -58,6 +58,40 @@ class Users {
         }
     }
 
+    static async getUserCategoriesAsMessage(options) {
+        let categoriesResults = await models.sequelize.models.Category.findAll({
+            where: {
+                [models.Sequelize.Op.or]: [
+                    {
+                        userId: {
+                            [models.Sequelize.Op.eq]: null,
+                        },
+                    },
+                    {
+                        userId: {
+                            [models.Sequelize.Op.eq]: options.userId,
+                        },
+                    }
+                ]                
+            },
+        });
+
+        if(Array.isArray(categoriesResults)) {
+            categoriesResults = categoriesResults.map(row => row.dataValues);
+            
+            let message = `الرجاء اختيار رقم الفئة:
+            `
+            categoriesResults.forEach((category) => {
+                message += `${category.id}. ${category.Name}
+                `
+            });
+            
+         return message;   
+        }
+
+        return null;
+    }
+
 
     // TESTED: OK
     static async getUserExpensesStatus(options) {
